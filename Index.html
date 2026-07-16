@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Prompt Hub - Curated AI prompts.">
 <title>AI Prompt Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -297,6 +298,8 @@
 
 <footer>© 2026 AI Prompt Hub · Built for prompt engineers, by prompt engineers.</footer>
 
+
+<button id="topBtn" style="position:fixed;bottom:20px;right:20px;padding:10px;display:none;z-index:99;">⬆</button>
 <script>
 const categories = [
   {key:'all', label:'All', icon:'✨'},
@@ -351,7 +354,12 @@ function renderChips(){
     `<button class="chip ${state.category===c.key?'active':''}" data-cat="${c.key}">${c.icon} ${c.label}</button>`
   ).join('');
   chipsEl.querySelectorAll('.chip').forEach(btn=>{
-    btn.addEventListener('click', ()=>{ state.category = btn.dataset.cat; renderGrid(); renderChips(); });
+    btn.addEventListener('click', ()=>{ state.category = btn.dataset.cat; renderGrid();
+
+const topBtn=document.getElementById('topBtn');
+window.addEventListener('scroll',()=>topBtn.style.display=window.scrollY>200?'block':'none');
+topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+ renderChips(); });
   });
 }
 
@@ -451,3 +459,4 @@ renderGrid();
 </script>
 </body>
 </html>
+
