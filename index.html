@@ -201,7 +201,7 @@
     text-align:center; color:var(--text-muted); padding:60px 20px; font-size:.95rem;
   }
 
-  /* ---------- Modal / Detailed Prompt Page ⭐ ---------- */
+  /* ---------- Modal / Detailed Prompt Page ---------- */
   .modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6);
     backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px;
@@ -389,7 +389,6 @@ const categories = [
   {key:'pixverse', label:'PixVerse', icon:'🌀'}
 ];
 
-// Added custom views, copies counter, and realistic tags
 const prompts = [
   {id:1, cat:'chatgpt', title:'Landing Page Copywriter', text:'Act as a senior conversion copywriter. Write landing page copy for [product] targeting [audience]. Include a headline, 3 benefit bullets, and one CTA line. Tone: confident, concise, no jargon.', tags:['Marketing', 'Writing'], copies: 342, views: 1200},
   {id:2, cat:'chatgpt', title:'Weekly Study Planner', text:'Create a 7-day study plan for [subject/exam] for someone with [hours] free per day. Break each day into focus blocks with topics, and add one revision day.', tags:['Productivity', 'Education'], copies: 198, views: 540},
@@ -408,18 +407,30 @@ const prompts = [
   {id:15, cat:'kling', title:'Nature Timelapse', text:'A timelapse of [subject: flower blooming / clouds moving / city day-to-night], smooth continuous motion, soft natural light transition, static wide shot, high detail.', tags:['Video', 'Nature'], copies: 132, views: 680},
   {id:16, cat:'kling', title:'Character Turnaround', text:'A 360-degree turnaround of [character description], neutral studio background, even lighting, smooth rotation, consistent character design throughout.', tags:['Video', 'Animation'], copies: 299, views: 1400},
   {id:17, cat:'pixverse', title:'Dreamlike Transition', text:'A dreamlike morphing transition from [scene A] into [scene B], soft particle dissolve effect, pastel color palette, gentle camera drift, ambient synth mood.', tags:['Video', 'Abstract'], copies: 165, views: 790},
-  {id:18, cat:'pixverse', title:'Looping Background Loop', text:'A seamless looping animated background of [theme], slow ambient motion, soft gradient lighting, no abrupt cuts, designed for a website hero section.', tags:['Video', 'Web Design'], copies: 210, views: 950}
+  {id:18, cat:'pixverse', title:'Looping Background Loop', text:'A seamless looping animated background of [theme], slow ambient motion, soft gradient lighting, no abrupt cuts, designed for a website hero section.', tags:['Video', 'Web Design'], copies: 210, views: 950},
+  {id:19, cat:'chatgpt', title:'Resume Bullet Rewriter', text:'Rewrite these resume bullet points to be achievement-focused using strong action verbs and numbers where possible: [paste bullets]. Keep each under 20 words.', tags:['Business', 'Writing'], copies: 115, views: 430},
+  {id:20, cat:'chatgpt', title:'Social Media Caption Pack', text:'Write 5 Instagram captions for [post topic], each with a different tone (funny, inspiring, professional, casual, bold). Add 3 relevant hashtags to each.', tags:['Marketing', 'Social'], copies: 340, views: 1210},
+  {id:21, cat:'claude', title:'Meeting Notes Cleaner', text:'Turn these raw meeting notes into a clean summary with: Decisions Made, Action Items (with owner), and Open Questions.\n\n[paste notes here]', tags:['Business', 'Productivity'], copies: 95, views: 390},
+  {id:22, cat:'claude', title:'Contract Clause Explainer', text:'Explain the following contract clause in plain English for a non-lawyer, and flag anything unusually risky or one-sided.\n\n[paste clause]', tags:['Business', 'Legal'], copies: 78, views: 310},
+  {id:23, cat:'midjourney', title:'Minimal Logo Concept', text:'minimalist logo for [brand name], flat vector, single color, geometric shapes, negative space technique, white background --ar 1:1 --style raw', tags:['Art', 'Design'], copies: 540, views: 1980},
+  {id:24, cat:'midjourney', title:'Food Photography', text:'overhead shot of [dish], natural window light, rustic wooden table, steam rising, shallow depth of field, editorial food magazine style --ar 4:5', tags:['Photography', 'Art'], copies: 230, views: 870},
+  {id:25, cat:'veo', title:'Drone Reveal Shot', text:'A sweeping drone shot rising above [location] at sunrise, revealing the full landscape, golden light, smooth cinematic camera movement, orchestral swell.', tags:['Video', 'Nature'], copies: 189, views: 710},
+  {id:26, cat:'veo', title:'Macro Detail Shot', text:'Extreme close-up macro shot of [object/texture], soft focus pull, subtle ambient light shift, minimal background blur, calm and meditative pacing.', tags:['Video', 'Abstract'], copies: 145, views: 590},
+  {id:27, cat:'kling', title:'Emotional Close-up', text:'A close-up shot of [character] slowly shifting expression from [emotion A] to [emotion B], soft natural lighting, subtle camera breathing motion.', tags:['Video', 'Cinematic'], copies: 210, views: 930},
+  {id:28, cat:'kling', title:'Object Transformation', text:'[Object A] smoothly morphs into [object B] in one continuous motion, clean studio lighting, seamless transformation, no jump cuts.', tags:['Video', 'Animation'], copies: 176, views: 810},
+  {id:29, cat:'pixverse', title:'Retro VHS Aesthetic', text:'A retro VHS-style animation of [scene], scan lines, slight color bleed, grainy texture, nostalgic 80s color grade, gentle camera sway.', tags:['Video', 'Atmospheric'], copies: 290, views: 1340},
+  {id:30, cat:'pixverse', title:'Glitch Reveal', text:'A digital glitch effect that reveals [subject] from static noise, RGB color splitting, quick flickers, cyberpunk neon accent lighting.', tags:['Video', 'Abstract'], copies: 154, views: 620}
 ];
 
 let state = { view:'home', category:'all', search:'', selectedTag:'all', sortBy:'latest', favorites:new Set() };
 
 function catInfo(key){ return categories.find(c=>c.key===key); }
 
-// Initialize advanced filters (tags extraction)
 function initFilters() {
   const allTags = new Set();
   prompts.forEach(p => p.tags && p.tags.forEach(t => allTags.add(t)));
   const tagFilterSelect = document.getElementById('tagFilter');
+  tagFilterSelect.innerHTML = '<option value="all">All Tags / Use Cases</option>';
   allTags.forEach(tag => {
     const opt = document.createElement('option');
     opt.value = tag;
@@ -432,7 +443,6 @@ function initFilters() {
   });
 }
 
-// Sorting logic tabs
 document.querySelectorAll('.sort-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
@@ -453,29 +463,23 @@ function renderChips(){
 }
 
 function filteredPrompts(customList = null){
-  let list = customList || prompts;
-  
-  // Category filter
+  let list = customList ? [...customList] : [...prompts];
   if(state.category !== 'all' && !customList) {
     list = list.filter(p => p.cat === state.category);
   }
-  // Tag Filter
   if(state.selectedTag !== 'all' && !customList) {
     list = list.filter(p => p.tags && p.tags.includes(state.selectedTag));
   }
-  // Search filter
   const q = state.search.trim().toLowerCase();
   if(q) {
     list = list.filter(p => p.title.toLowerCase().includes(q) || p.text.toLowerCase().includes(q) || (p.tags && p.tags.some(t => t.toLowerCase().includes(q))));
   }
-
-  // Sorting system (Latest, Popular, Trending)
   if(state.sortBy === 'popular') {
     list.sort((a,b) => b.views - a.views);
   } else if(state.sortBy === 'trending') {
     list.sort((a,b) => b.copies - a.copies);
   } else {
-    list.sort((a,b) => b.id - a.id); // Latest sorted by id
+    list.sort((a,b) => b.id - a.id);
   }
   return list;
 }
@@ -519,7 +523,6 @@ function renderFavorites(){
     `<div class="empty" style="grid-column:1/-1;">No favorites yet — tap the heart on any prompt to save it here.</div>`;
 }
 
-// Global action functions
 function copyPrompt(e, id, btn) {
   if(e) e.stopPropagation();
   const p = prompts.find(x=>x.id==id);
@@ -527,7 +530,6 @@ function copyPrompt(e, id, btn) {
     p.copies++;
     const countEl = btn.parentElement.querySelector('.count-num');
     if(countEl) countEl.textContent = p.copies;
-    
     btn.textContent = '✅ Copied!';
     btn.classList.add('copied');
     setTimeout(()=>{ btn.textContent='📋 Copy'; btn.classList.remove('copied'); }, 1500);
@@ -541,11 +543,10 @@ function toggleFav(e, id) {
   if(state.view==='favorites') renderFavorites();
 }
 
-// Detailed Prompt Modal View (Page Feature) ⭐
 function openPromptDetail(id, e) {
   const p = prompts.find(x=>x.id===id);
   if(!p) return;
-  p.views += 1; // Increase view count
+  p.views += 1;
   
   const c = catInfo(p.cat);
   const modal = document.getElementById('promptModal');
@@ -558,16 +559,13 @@ function openPromptDetail(id, e) {
     </div>
     <h2 style="font-family: var(--font-display); margin-top:10px;">${p.title}</h2>
     <p style="color: var(--text-muted); font-size:0.9rem;">👁️ ${p.views} global views &nbsp;•&nbsp; 📥 Total Used: <span class="count-num">${p.copies}</span> times</p>
-    
     <div style="margin-top:10px;">
       <h4 style="font-family: var(--font-display); margin-bottom:6px;">Prompt Preview Box:</h4>
       <div class="prompt-preview-box">${p.text}</div>
     </div>
-    
     <button class="copy-btn" style="width:100%; justify-content:center; padding:12px; font-size:1rem; margin-top:10px;" onclick="copyPrompt(null, ${p.id}, this)">📋 Copy Full Prompt</button>
   `;
   
-  // Render Related Prompts section
   const relatedGrid = document.getElementById('relatedGrid');
   const related = prompts.filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 3);
   relatedGrid.innerHTML = related.length ? related.map(cardHTML).join('') : '<p style="color:var(--text-muted); font-size:0.85rem;">No related prompt available.</p>';
@@ -585,13 +583,11 @@ document.getElementById('promptModal').addEventListener('click', (e) => {
   }
 });
 
-// Real-time Search
 document.getElementById('searchInput').addEventListener('input', (e)=>{
   state.search = e.target.value;
   renderGrid();
 });
 
-// View switcher
 const views = {home:'homeView', favorites:'favoritesView', about:'aboutView', contact:'contactView'};
 function setView(v){
   state.view = v;
@@ -616,23 +612,18 @@ themeBtn.addEventListener('click', ()=>{
   themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
 });
 
-// Scroll to top button handling
 const scrollTopBtn = document.getElementById('scrollTopBtn');
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 300) {
-    scrollTopBtn.style.display = 'flex';
-  } else {
-    scrollTopBtn.style.display = 'none';
-  }
+  scrollTopBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
 });
 scrollTopBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// Core Init
 initFilters();
 renderChips();
 renderGrid();
 </script>
 </body>
 </html>
+
