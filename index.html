@@ -59,7 +59,7 @@
     font-family:var(--font-display); font-weight:700; font-size:1.3rem;
   }
   .logo .mark{
-    width:34px; height:34px; border-radius:99px;
+    width:34px; height:34px; border-radius:999px;
     background:linear-gradient(135deg, var(--violet), var(--amber));
     display:flex; align-items:center; justify-content:center;
     font-size:1.1rem;
@@ -145,13 +145,6 @@
   .copy-count { font-size: .78rem; color: var(--text-muted); font-family: var(--font-mono); }
 
   .empty{ text-align:center; color:var(--text-muted); padding:60px 20px; font-size:.95rem; }
-
-  .variables-panel { background: var(--bg-elevated); border: 1px solid var(--border); padding: 16px; border-radius: 12px; margin-bottom: 10px; }
-  .variables-panel h5 { font-family: var(--font-display); margin-bottom: 12px; font-size: 0.95rem; color: var(--amber); }
-  .builder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  @media (max-width: 480px) { .builder-grid { grid-template-columns: 1fr; } }
-  .builder-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-size: 0.88rem; margin-bottom: 10px; outline: none; }
-  .builder-input:focus { border-color: var(--violet); }
 
   .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; }
   .modal-overlay.open { display: flex; }
@@ -297,7 +290,6 @@
 </footer>
 
 <script>
-// Deep 9-10 lines text datasets to generate premium structural layouts safely without heavy asset file sizes
 const baseText9Lines = [
   "Initialize structural framework architectures targeting specific output metrics.\nEstablish granular context rules regarding workflow operational variables safely.\nDeploy multi-layered strategic concepts optimized for performance scaling pipelines.\nRefine layout hierarchies directly inline with production standards natively.\nInject modular automation properties without scaling computational system overhead.\nExlect behavioral rules strictly targeting specific user intent matrices.\nMonitor edge-case variables continuously for high fidelity asset generation.\nFormat data elements dynamically across unified responsive interface systems.\nFinalize cross-platform integration pipelines ensuring zero computational asset decay.\nVerify system output targets match premium user scaling configurations successfully.",
   
@@ -319,7 +311,6 @@ const tagsList = [["SEO", "Marketing"], ["Coding", "Development"], ["Art", "Desi
 let rawPrompts = [];
 let idCounter = 1;
 
-// Generating exactly 200 high fidelity records seamlessly via functional allocation loop loops
 const modelKeys = ['chatgpt', 'claude', 'midjourney', 'veo', 'kling ai', 'pixverse'];
 for(let i = 0; i < 200; i++) {
   let model = modelKeys[i % modelKeys.length];
